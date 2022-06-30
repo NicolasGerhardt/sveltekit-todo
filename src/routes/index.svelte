@@ -21,7 +21,7 @@
 
 <script lang="ts">
   import TodoItem from "$lib/todo-item.svelte";
-  export let todos: Todo[];
+  export let todos: App.Todo[];
 
   const title = "Todos!";
 </script>

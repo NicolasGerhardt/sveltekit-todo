@@ -10,7 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		methodOverride: {
-			allowed: ['DELETE']
+			allowed: ['PATCH', 'DELETE']
 		  }
 	}
 };

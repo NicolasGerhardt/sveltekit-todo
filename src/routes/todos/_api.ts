@@ -1,7 +1,8 @@
 import type { RequestEvent, RequestHandler, ResponseBody } from "@sveltejs/kit";
+import { append } from "svelte/internal";
 
 // TODO: Persist in database
-let todos: (Todo)[] = [
+let todos: (App.Todo)[] = [
     {
         uid: `${Date.now() - 2 }`, //TODO replace with UID from database
         created_at: new Date(),
@@ -16,7 +17,7 @@ let todos: (Todo)[] = [
     },
 ];
 
-export const api = (reqEvent: RequestEvent, todoItem?: Todo) => {
+export const api = (reqEvent: RequestEvent, data?: App.Todo | Record<string, string | boolean>) => {
     let body = {};
     let status = 500;
     let headers = {
@@ -29,15 +30,25 @@ export const api = (reqEvent: RequestEvent, todoItem?: Todo) => {
             status = 200;
             break;
         case "POST":
-            if (todoItem) {
-                todos.push(todoItem)
-                status = 303
+            if (data) {
+                todos.push(data as App.Todo)
+                status = 302
             }
             break;
         case "DELETE":
             console.log("deleted")
             todos = todos.filter(todo => todo.uid !== reqEvent.params.uid)
-            status = 303
+            status = 302
+            break;
+        case "PATCH":
+            todos = todos.map(todo => {
+                if (todo.uid === reqEvent.params.uid) {
+                    todo.text = data?.text as string
+                }
+                return todo;
+            })
+            status = 302
+            body = todos
             break;
         default:
             break;
