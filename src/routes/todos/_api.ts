@@ -17,7 +17,7 @@ let todos: (App.Todo)[] = [
     },
 ];
 
-export const api = (reqEvent: RequestEvent, data?: App.Todo | Record<string, string | boolean>) => {
+export const api = (reqEvent: RequestEvent, data?: App.Todo | Record<string, string | boolean | undefined>) => {
     let body = {};
     let status = 500;
     let headers = {
@@ -43,7 +43,8 @@ export const api = (reqEvent: RequestEvent, data?: App.Todo | Record<string, str
         case "PATCH":
             todos = todos.map(todo => {
                 if (todo.uid === reqEvent.params.uid) {
-                    todo.text = data?.text as string
+                    if (data?.text) todo.text = data?.text as string
+                    else todo.done = data?.done as boolean
                 }
                 return todo;
             })
